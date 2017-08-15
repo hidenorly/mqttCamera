@@ -15,6 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import time
 import sys
 import codecs
 import datetime
@@ -179,13 +181,23 @@ class MqttCameraSubscriber(MQTTSubscriber):
 	def onMessage(self, msg):
 		#print("MySubscriber:" + msg.topic + " " + str(msg.payload))
 		filename = self.outputPath+"/"+FileUtils.getYMDHMSFilename(self.outputPath)+".jpg"
-		OpenCvCamera.captureImage(
-			self.captureIndex, 
-			self.width, 
-			self.height, 
-			filename, 
-			self.skipFrame
-		)
+
+		trialCount=3
+		while trialCount>0:
+			trialCount = trialCount - 1
+			OpenCvCamera.captureImage(
+				self.captureIndex, 
+				self.width, 
+				self.height, 
+				filename, 
+				self.skipFrame
+			)
+			if os.path.getsize(filename)!=0:
+				break
+			else:
+				time.sleep(1)
+				print("Camera capture is failed.")
+
 		if self.execCommand:
 			exec_cmd = self.execCommand+" "+filename
 			result_stdout, result_stderr = SystemUtils.getExecResult(exec_cmd)
