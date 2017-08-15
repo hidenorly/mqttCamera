@@ -23,11 +23,17 @@ On Ubuntu environment, you need to use ```sudo pip install paho-mqtt``` instead.
 ## Basic usage
 
 ```
-$ ./mqttCamera.py --host=192.168.10.1 -t /hidenorly/camera -f 10 --exec="echo mqttCamera | /opt/mailpy/mail.py hoge@gmail.com -s mqttCamera -a "
+$ ./mqttCamera.py --host=192.168.10.1 -t /hidenorly/camera -f 10
 ```
 
 And you can trigger by MQTT subscriber such as https://github.com/hidenorly/simpleMqttClient
 
 ```
 $ ./simpleMqttClient.py --host 192.168.10.1 -t "/hidenorly/camera" -v "take"
+```
+
+If you want to send the photo as attachment, [mail.py](https://github.com/hidenorly/mailpy) might be helpful as follows:
+
+```
+$ ./mqttCamera.py --host=192.168.10.1 -t /hidenorly/camera -f 10 --exec="echo mqttCamera | /opt/mailpy/mail.py hoge@gmail.com -s mqttCamera -a "
 ```
